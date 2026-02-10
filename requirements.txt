@@ -1,0 +1,28 @@
+# --- CORE ---
+fastapi
+uvicorn[standard]
+
+# --- ASYNC STACK ---
+sqlalchemy[asyncio]
+asyncpg
+
+# --- TELEGRAM ---
+aiogram==3.*
+
+# --- UTILS ---
+python-dateutil
+dateparser
+
+# --- LLM API ---
+httpx
+
+# --- AUTH / SECURITY ---
+python-jose[cryptography]
+passlib[bcrypt]
+
+# --- DATABASE MIGRATIONS (опционально) ---
+alembic
+
+# --- ENV ---
+pydantic-settings
+python-dotenv
