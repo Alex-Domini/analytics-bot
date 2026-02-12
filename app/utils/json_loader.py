@@ -1,0 +1,10 @@
+import json
+from pathlib import Path
+
+
+def load_json(path: str):
+    file_path = Path(path)
+
+    with file_path.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
