@@ -5,6 +5,7 @@ from aiogram.client.default import DefaultBotProperties
 import asyncio
 
 from app.core.config import settings
+from app.services.sql_executor import count_all_videos
 
 bot = Bot(
     token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
@@ -12,9 +13,20 @@ bot = Bot(
 dp = Dispatcher()
 
 
+# @dp.message()
+# async def handle_message(message: Message):
+#     await message.answer("Бот работает")
+
+
 @dp.message()
 async def handle_message(message: Message):
-    await message.answer("Бот работает")
+    text_msg = (message.text or "").strip().lower()
+
+    if "сколько всего видео" in text_msg:
+        value = await count_all_videos()
+        await message.answer(str(value))
+        return
+    await message.answer("Пока понимаю только: 'Сколько всего видео есть в системе?'")
 
 
 async def main():
