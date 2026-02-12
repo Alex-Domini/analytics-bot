@@ -1,28 +1,44 @@
-# --- CORE ---
-fastapi
-uvicorn[standard]
+# =========================
+# CORE
+# =========================
+fastapi==0.128.7
+uvicorn[standard]==0.40.0
 
-# --- ASYNC STACK ---
-sqlalchemy[asyncio]
-asyncpg
+# =========================
+# DATABASE (ASYNC)
+# =========================
+SQLAlchemy==2.0.46
+asyncpg==0.31.0
 
-# --- TELEGRAM ---
-aiogram==3.*
+# =========================
+# AUTH / SECURITY
+# =========================
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
 
-# --- UTILS ---
-python-dateutil
-dateparser
+# =========================
+# TELEGRAM
+# =========================
+aiogram==3.24.0
 
-# --- LLM API ---
-httpx
+# =========================
+# HTTP CLIENT (LLM / APIs)
+# =========================
+httpx==0.28.1
 
-# --- AUTH / SECURITY ---
-python-jose[cryptography]
-passlib[bcrypt]
+# =========================
+# UTILITIES
+# =========================
+python-dateutil==2.9.0.post0
+dateparser==1.3.0
 
-# --- DATABASE MIGRATIONS (опционально) ---
-alembic
+# =========================
+# ENV / CONFIG
+# =========================
+pydantic-settings==2.12.0
+python-dotenv==1.2.1
 
-# --- ENV ---
-pydantic-settings
-python-dotenv
+# =========================
+# DATABASE MIGRATIONS
+# =========================
+alembic==1.18.4
