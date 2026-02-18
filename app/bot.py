@@ -1,35 +1,42 @@
+import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-import asyncio
 
 from app.core.config import settings
-from app.services.sql_executor import count_all_videos
+from app.services.sql_executor import SQLExecutor
+from app.llm.fake_client import FakeLLMService
 
 bot = Bot(
     token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
 dp = Dispatcher()
 
-
-# @dp.message()
-# async def handle_message(message: Message):
-#     await message.answer("Бот работает")
+llm_service = FakeLLMService()
+sql_executor = SQLExecutor()
 
 
 @dp.message()
 async def handle_message(message: Message):
-    text_msg = (message.text or "").strip().lower()
+    try:
+        if not message.text:
+            await message.answer("Отправьте текстовый запрос")
+            return
 
-    if "сколько всего видео" in text_msg:
-        value = await count_all_videos()
-        await message.answer(str(value))
-        return
-    await message.answer("Пока понимаю только: 'Сколько всего видео есть в системе?'")
+        request = await llm_service.parse(message.text)
+        result = await sql_executor.execute(request)
+        await message.answer(str(result))
+    except ValueError as e:
+        await message.answer(str(e))
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        await message.answer("Внутренняя ошибка сервера")
 
 
 async def main():
+    print("Bot is starting...")
     await dp.start_polling(bot)
 
 

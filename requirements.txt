@@ -42,3 +42,7 @@ python-dotenv==1.2.1
 # DATABASE MIGRATIONS
 # =========================
 alembic==1.18.4
+
+openai==2.21.0
+
+dateparser==1.3.0
