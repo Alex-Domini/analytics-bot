@@ -1,4 +1,6 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Literal
 
 
 class Settings(BaseSettings):
@@ -9,6 +11,20 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
 
     BOT_TOKEN: str
+
+    OPENAI_API_KEY: str | None = None
+    LLM_PROVIDER: Literal["openai", "fake", "local"] = "fake"
+
+    @field_validator("OPENAI_API_KEY")
+    @classmethod
+    def check_openai_key(cls, v: str, info):
+        if v == "your_key_here" or not v.startswith("sk-"):
+            raise ValueError(
+                "Вы забыли заменить 'your_key_here' на реальный ключ OpenAI в файле .env!"
+            )
+        return v
+
+    model_config = SettingsConfigDict(env_file=".env")
 
     @property
     def DATABASE_URL(self) -> str:
@@ -24,8 +40,6 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL_SYNC(self) -> str:
         return self.DATABASE_URL.replace("+asyncpg", "")
-
-    model_config = SettingsConfigDict(env_file=".env")
 
 
 settings = Settings()  # type: ignore

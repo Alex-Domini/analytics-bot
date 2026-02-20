@@ -1,4 +1,5 @@
 import asyncio
+
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.enums import ParseMode
@@ -6,14 +7,15 @@ from aiogram.client.default import DefaultBotProperties
 
 from app.core.config import settings
 from app.services.sql_executor import SQLExecutor
-from app.llm.fake_client import FakeLLMService
+from app.llm.provider import get_llm_service
+
 
 bot = Bot(
     token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
 dp = Dispatcher()
 
-llm_service = FakeLLMService()
+llm_service = get_llm_service()
 sql_executor = SQLExecutor()
 
 
