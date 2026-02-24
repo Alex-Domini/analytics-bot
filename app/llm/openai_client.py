@@ -29,7 +29,7 @@ class OpenAILLMService(BaseLLMService):
         Формат ответа:
         {
           "metric": "...",
-          "creator_id": int | null,
+          "creator_id": string | null,
           "date_from": "YYYY-MM-DD" | null,
           "date_to": "YYYY-MM-DD" | null,
           "target_date": "YYYY-MM-DD" | null,
@@ -53,6 +53,8 @@ class OpenAILLMService(BaseLLMService):
 
             assert content is not None
             data = json.loads(content)
+            if "creator_id" in data and data["creator_id"] is not None:
+                data["creator_id"] = str(data["creator_id"])
             return AnalyticsRequest(**data)
         except Exception as e:
             print(f"OpenAI Error: {e}")

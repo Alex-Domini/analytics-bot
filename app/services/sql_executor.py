@@ -39,11 +39,19 @@ class SQLExecutor:
 
             # 3. Видео с просмотрами больше N
             if request.metric == "videos_with_views_threshold":
-                result = await session.execute(
+                if request.views_threshold is None:
+                    raise ValueError("views_threshold is required")
+
+                stmt = (
                     select(func.count())
                     .select_from(Video)
                     .where(Video.views_count > request.views_threshold)
                 )
+
+                if request.creator_id:
+                    stmt = stmt.where(Video.creator_id == request.creator_id)
+
+                result = await session.execute(stmt)
                 return result.scalar_one()
 
             # 4. Суммарный прирост просмотров за день

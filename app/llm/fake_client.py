@@ -17,6 +17,7 @@ class FakeLLMService(BaseLLMService):
         dates = search_dates(text, languages=["ru"])
         parsed_dates = [d[1].date() for d in dates] if dates else []
 
+        uuid_match = re.findall(r"[0-9a-fA-F]{32,36}", text)
         # ======================================================
         # 1. ВСЕГО ВИДЕО
         # ======================================================
@@ -37,7 +38,23 @@ class FakeLLMService(BaseLLMService):
             )
 
         # ======================================================
-        # 3. ПРИРОСТ ПРОСМОТРОВ ЗА ДЕНЬ
+        # 3. СКОЛЬКО ВИДЕО У КРЕАТОРА
+        # ======================================================
+        if "креатор" in text or "creator" in text or "автор" in text:
+            creator_id = None
+            if uuid_match:
+                creator_id = uuid_match[0]
+            elif numbers:
+                creator_id = str(numbers[0])
+
+            if creator_id is None:
+                raise ValueError("Не удалось определить creator_id")
+            return AnalyticsRequest(
+                metric="creator_total_videos", creator_id=creator_id
+            )
+
+        # ======================================================
+        # 4. ПРИРОСТ ПРОСМОТРОВ ЗА ДЕНЬ
         # ======================================================
         if ("вырос" in text or "прирост" in text or "прибав" in text) and parsed_dates:
             return AnalyticsRequest(
@@ -45,7 +62,7 @@ class FakeLLMService(BaseLLMService):
             )
 
         # ======================================================
-        # 4. РАЗНЫЕ ВИДЕО С НОВЫМИ ПРОСМОТРАМИ
+        # 5. РАЗНЫЕ ВИДЕО С НОВЫМИ ПРОСМОТРАМИ
         # ======================================================
         if (
             ("разных" in text or "разные" in text)
@@ -56,9 +73,8 @@ class FakeLLMService(BaseLLMService):
                 metric="distinct_videos_with_new_views_for_day",
                 target_date=parsed_dates[0],
             )
-
         # ======================================================
-        # 5. ВИДЕО КРЕАТОРА В ДИАПАЗОНЕ
+        # 6. ВИДЕО КРЕАТОРА В ДИАПАЗОНЕ
         # ======================================================
         creator_match = re.search(r"id\s*(\d+)", text)
 
