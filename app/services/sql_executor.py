@@ -1,5 +1,4 @@
 from sqlalchemy import select, func, distinct
-from datetime import datetime, time
 
 from app.db.session import AsyncSessionLocal
 from app.models import Video, VideoSnapshot
@@ -23,16 +22,15 @@ class SQLExecutor:
                 ):
                     raise ValueError("creator_id, date_from and date_to are required")
 
-                date_from_dt = datetime.combine(request.date_from, time.min)
-                date_to_dt = datetime.combine(request.date_to, time.max)
+                utc_date = func.date(func.timezone("UTC", Video.video_created_at))
 
                 result = await session.execute(
                     select(func.count())
                     .select_from(Video)
                     .where(
                         Video.creator_id == request.creator_id,
-                        Video.video_created_at >= date_from_dt,
-                        Video.video_created_at <= date_to_dt,
+                        utc_date >= request.date_from,
+                        utc_date <= request.date_to,
                     )
                 )
                 return result.scalar_one()
