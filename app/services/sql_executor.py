@@ -80,4 +80,13 @@ class SQLExecutor:
                 )
                 return result.scalar_one()
 
+            # 7 Суммарное количество просмотров набрали все видео, опубликованные в определенную дату?
+            if request.metric == "videos_views_sum_in_range":
+                utc_date = func.date(func.timezone("UTC", Video.video_created_at))
+                result = await session.execute(
+                    select(func.coalesce(func.sum(Video.views_count), 0)).where(
+                        utc_date >= request.date_from, utc_date <= request.date_to
+                    )
+                )
+                return result.scalar_one()
             raise ValueError("Неизвестная метрика")
