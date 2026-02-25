@@ -70,4 +70,14 @@ class SQLExecutor:
                     )
                 )
                 return result.scalar_one()
+
+            # 6. Сколько снапшотов имеют отрицательный прирост просмотров
+            if request.metric == "negative_views_snapshots":
+                result = await session.execute(
+                    select(func.count())
+                    .select_from(VideoSnapshot)
+                    .where(VideoSnapshot.delta_views_count < 0)
+                )
+                return result.scalar_one()
+
             raise ValueError("Неизвестная метрика")

@@ -25,6 +25,7 @@ class OpenAILLMService(BaseLLMService):
         - videos_with_views_threshold
         - views_growth_for_day
         - distinct_videos_with_new_views_for_day
+        - negative_views_snapshots
 
         Формат ответа:
         {
