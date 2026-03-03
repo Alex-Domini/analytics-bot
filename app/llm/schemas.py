@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 
 
 class AnalyticsRequest(BaseModel):
@@ -9,4 +9,7 @@ class AnalyticsRequest(BaseModel):
     target_date: date | None = None
     date_from: date | None = None
     date_to: date | None = None
+
+    datetime_from: datetime | None = None
+    datetime_to: datetime | None = None
     views_threshold: int | None = None

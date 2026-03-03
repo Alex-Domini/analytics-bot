@@ -27,6 +27,7 @@ class OpenAILLMService(BaseLLMService):
         - distinct_videos_with_new_views_for_day
         - negative_views_snapshots
         - videos_views_sum_in_range
+        - views_growth_for_time_range
 
         Формат ответа:
         {
@@ -35,7 +36,9 @@ class OpenAILLMService(BaseLLMService):
           "date_from": "YYYY-MM-DD" | null,
           "date_to": "YYYY-MM-DD" | null,
           "target_date": "YYYY-MM-DD" | null,
-          "views_threshold": int | null
+          "views_threshold": int | null,
+          "datetime_from": "YYYY-MM-DDTHH:MM:SS" | null,
+          "datetime_to": "YYYY-MM-DDTHH:MM:SS" | null
         }
 
         Никакого текста. Только JSON.

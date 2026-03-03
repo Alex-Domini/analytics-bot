@@ -89,4 +89,30 @@ class SQLExecutor:
                     )
                 )
                 return result.scalar_one()
+
+            if request.metric == "views_growth_for_time_range":
+                if (
+                    request.creator_id is None
+                    or request.datetime_from is None
+                    or request.datetime_to is None
+                ):
+                    raise ValueError(
+                        "creator_id, datetime_from and datetime_to are required"
+                    )
+
+                result = await session.execute(
+                    select(
+                        func.coalesce(func.sum(VideoSnapshot.delta_views_count), 0)
+                    ).where(
+                        VideoSnapshot.created_at >= request.datetime_from,
+                        VideoSnapshot.created_at <= request.datetime_to,
+                        VideoSnapshot.video_id.in_(
+                            select(Video.id).where(
+                                Video.creator_id == request.creator_id
+                            )
+                        ),
+                    )
+                )
+
+                return result.scalar_one()
             raise ValueError("Неизвестная метрика")

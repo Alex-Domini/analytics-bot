@@ -9,12 +9,11 @@
 - Асинхронная работа  
 - LLM-провайдер: `fake` или `openai`
 
-
 ##  Установка и запуск
 
 ### 1. Клонировать репозиторий
-git clone https://github.com/your_repo
-cd analytics-bot
+- git clone https://github.com/Alex-Domini/analytics-bot
+- cd analytics-bot
 
 
 ### 2. Создать виртуальное окружение
@@ -46,11 +45,23 @@ pip install -r requirements.txt
 ## Миграции
 - alembic upgrade head
 
+## Как подготовить данные:
+1. Перейдите в раздел **[Releases](https://github.com/Alex-Domini/analytics-bot/releases/tag/v1.0.0)**.
+2. В блоке **Assets** скачайте файл `videos.json`.
+3. Положите скачанный файл в корневую папку проекта
+
 ## Загрузка данных из JSON
 - python -m app.main
 
 ## Запуск Telegram-бота
 - python -m app.bot
+
+## Небольшой список вопросов для Телеграм-бота
+- Какое суммарное количество просмотров набрали все видео, опубликованные в июне 2025 года?
+- число просмотров за час оказалось отрицательным
+- Сколько всего видео загружено в систему
+- Сколько видео набрало больше 10 000 просмотров за всё время
+- Сколько видео у креатора aca1061a9d324ecf8c3fa2bb32d7be63 вышло с 1 по 20 ноября 2025?
 
 ## Архитектура
  Telegram → NL Parser → AnalyticsRequest → SQLExecutor → PostgreSQL
